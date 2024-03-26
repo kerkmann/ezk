@@ -24,7 +24,7 @@ where
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(super) enum Transport {
     /// SIP+D2U
     Udp,
@@ -137,6 +137,7 @@ async fn resolve_naptr_records(
                 None
             }
         })
+        .filter(|record| Transport::from_services(record.services()) != Some(Transport::TlsOverTcp))
         .collect();
     naptr_records.sort_unstable_by_key(|naptr| naptr.order());
 
